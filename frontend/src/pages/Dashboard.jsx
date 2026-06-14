@@ -1,25 +1,28 @@
 import { useState, useEffect } from 'react'
-import { getSummary, getTrends } from '../api'
+import { getSummary, getTrends, getCategoryBreakdown } from '../api'
 import KpiCard from '../components/KpiCard'
 import RevenueChart from '../components/RevenueChart'
+import CategoryChart from '../components/CategoryChart'
 
 export default function Dashboard() {
   const [summary, setSummary] = useState(null)
   const [trends, setTrends] = useState([])
   const [loading, setLoading] = useState(true)
+  const [categoryData, setCategoryData] = useState([])
 
-  useEffect(() => {
-    Promise.all([getSummary(), getTrends()])
-      .then(([summaryData, trendsData]) => {
-        setSummary(summaryData)
-        setTrends(trendsData)
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
-      })
-  }, [])
+ useEffect(() => {
+  Promise.all([getSummary(), getTrends(), getCategoryBreakdown()])
+    .then(([summaryData, trendsData, categoryDataRes]) => {
+      setSummary(summaryData)
+      setTrends(trendsData)
+      setCategoryData(categoryDataRes)
+      setLoading(false)
+    })
+    .catch(err => {
+      console.error(err)
+      setLoading(false)
+    })
+}, [])
 
   if (loading) return <div style={{ padding: '24px' }}>Loading dashboard...</div>
   if (!summary) return <div style={{ padding: '24px' }}>Failed to load data.</div>
@@ -47,6 +50,7 @@ export default function Dashboard() {
       </div>
 
       <RevenueChart data={trends} />
+      <CategoryChart data={categoryData} />
     </div>
   )
 }

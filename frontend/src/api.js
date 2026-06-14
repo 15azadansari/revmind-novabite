@@ -2,6 +2,8 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
 export const getSummary = () =>
   fetch(`${API_URL}/api/summary`).then(r => r.json())
+export const getCategoryBreakdown = () =>
+  fetch(`${API_URL}/api/category-breakdown`).then(r => r.json())
 
 export const getTrends = () =>
   fetch(`${API_URL}/api/trends`).then(r => r.json())
